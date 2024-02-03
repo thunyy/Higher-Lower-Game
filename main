@@ -1,0 +1,65 @@
+from art import logo
+from art import vs
+from game_data import data
+from replit import clear
+import random
+
+print(logo)
+
+
+def get_random_account():
+  return random.choice(data)
+
+
+def format_data(account):
+  name = account["name"]
+  description = account["description"]
+  country = account["country"]
+  return f"{name}, a {description}, from {country}"
+
+
+def check_answer(guess, a_followers, b_followers):
+  if a_followers > b_followers:
+    return guess == "A"
+  else:
+    return guess == "B"
+
+
+def game():
+  account_used = []
+  score = 0
+  win = True
+  account_a = get_random_account()
+
+  while win:
+    account_b = get_random_account()
+
+    while account_b == account_a or account_b in account_used:
+      account_b = get_random_account()
+
+    account_used.append(account_b)
+
+    print(f"Compare A: {format_data(account_a)}.")
+    print(vs)
+    print(f"Against B: {format_data(account_b)}.")
+
+    choice = input("Who has more followers? Type 'A' or 'B': ").upper()
+
+    a_followers = account_a["follower_count"]
+    b_followers = account_b["follower_count"]
+
+    clear()
+    print(logo)
+
+    if check_answer(choice, a_followers, b_followers):
+      score += 1
+      print(f"You're right! Current score: {score}.")
+    else:
+      print(f"Game over. Your final score is: {score}")
+      break
+
+    # Update account_a for the next round
+    account_a = account_b
+
+
+game()
